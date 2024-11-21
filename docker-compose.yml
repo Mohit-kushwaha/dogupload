@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # Service for the Node.js API app
+  api:
+    build: .
+    container_name: dog-auth-api
+    ports:
+      - "3000:3000"  # Expose the port to the host
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/dogAuthAPI  # Use the MongoDB container
+      - JWT_SECRET=_:"^35]59cp6$Y=u,[="tD8JwV£S}3K'Ak*,O~vN+\4-b2Sd"J
+      - PORT=3000
+    depends_on:
+      - mongo  # Wait for MongoDB to be ready before starting the app
+    volumes:
+      - .:/usr/src/server  # Mount the current directory to the container
+    restart: always  # Automatically restart the app if it crashes
+
+  # Service for MongoDB
+  mongo:
+    image: mongo:latest
+    container_name: dog-auth-mongo
+    ports:
+      - "27017:27017"  # Expose MongoDB port
+    volumes:
+      - mongo-data:/data/db  # Persist MongoDB data across container restarts
+    restart: always  # Automatically restart MongoDB if it crashes
+
+# Volumes definition for persisting MongoDB data
+volumes:
+  mongo-data:
