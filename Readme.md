@@ -20,8 +20,8 @@ Clone this repository to your local machine.
 
 
 
-git clone https://github.com/your-username/dog-auth-api.git
-cd dog-auth-api
+git clone https://github.com/Mohit-kushwaha/dogupload.git
+
 2. Install Dependencies
 Install all the required dependencies using npm:
 
