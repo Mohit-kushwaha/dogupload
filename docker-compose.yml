@@ -1,32 +1,35 @@
-version: '3.8'
-
+version: "3.8"  # Docker Compose file format version
+ 
 services:
-  # Service for the Node.js API app
-  api:
-    build: .
-    container_name: dog-auth-api
-    ports:
-      - "3000:3000"  # Expose the port to the host
-    environment:
-      - MONGO_URI=mongodb://mongo:27017/dogAuthAPI  # Use the MongoDB container
-      - JWT_SECRET=_:"^35]59cp6$Y=u,[="tD8JwV£S}3K'Ak*,O~vN+\4-b2Sd"J
-      - PORT=3000
-    depends_on:
-      - mongo  # Wait for MongoDB to be ready before starting the app
+  dog-auth-api:  # Name of the service
+    container_name: dog-auth-api  # Name of the container
+    image: dog-auth-api:latest  # Docker image to be used for the service
+    build:
+      context: ./  # Path to the Dockerfile for building the image
     volumes:
-      - .:/usr/src/server  # Mount the current directory to the container
-    restart: always  # Automatically restart the app if it crashes
-
-  # Service for MongoDB
-  mongo:
-    image: mongo:latest
-    container_name: dog-auth-mongo
+      - "./:/app"  # Mounting the current directory to /app directory inside the container
+      - "/app/node_modules"
     ports:
-      - "27017:27017"  # Expose MongoDB port
-    volumes:
-      - mongo-data:/data/db  # Persist MongoDB data across container restarts
-    restart: always  # Automatically restart MongoDB if it crashes
-
-# Volumes definition for persisting MongoDB data
-volumes:
-  mongo-data:
+      - "3000:3000"  # Port mapping from host to container (host:container)
+      - "5858:5858"  # Another port mapping (Debugging)
+    env_file:
+      - .env  # Environment variable file to be used by the service
+    restart: always  # Restart policy for the container
+    networks:
+      - docker-doks  # Attaching the service to the defined network
+    logging:
+      driver: "json-file"  # Logging driver to use
+      options:
+        max-file: "5"  # Maximum number of log files to keep
+        max-size: "10m"  # Maximum size of each log file
+    deploy:
+      resources:
+        limits:
+          cpus: "0.80"  # CPU limit for the service
+          memory: 1g  # Memory limit for the service
+ 
+ 
+networks:
+  docker-doks:  # Definition of the custom bridge network
+    driver: bridge  # Using the bridge network driver
+ 

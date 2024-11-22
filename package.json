@@ -4,8 +4,9 @@
   "description": "RESTful API for uploading and managing dog pictures",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "nodemon --legacy-watch --inspect=0.0.0.0:5858 ./src/server.js",
     "dev": "nodemon src/server.js",
+    "debug": "node --inspect=0.0.0.0:5858 ./src/server.js --ignore 'node_modules/'",
     "test": "jest --runInBand --verbose",
     "lint": "eslint ."
   },

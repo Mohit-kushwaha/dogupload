@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const dotenv = require('dotenv');
+const { response } = require('express');
 
 dotenv.config();
 
@@ -9,6 +10,11 @@ exports.register = async (req, res) =>
     try
     {
         const { username, password } = req.body;
+        const isUserPresent = await User.find({ username: username});
+
+        if(isUserPresent.length > 0){
+            res.status(403).json({ message: 'User already exist' });
+        }
         const user = new User({ username, password });
         await user.save();
         res.status(201).json({ message: 'User registered successfully' });
